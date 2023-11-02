@@ -26,7 +26,7 @@ int main()
 {
 	LinkList L;
 	InitList(L);
-	printf("hhh");
+	printf("--E-N-D--");
 	
     return 0;
 }
@@ -143,14 +143,25 @@ LNode* LocateElem(LinkList L, ElemType e)
 
 bool BuildList_HeadInsert(LinkList &L)
 {
-
+	int e;
+	// if ElementType is modified.Remember to modify the format parameter of scanf()
+	while (scanf("%d", &e))
+	{
+		if (InsertNextNode(L, e)) continue;
+		else return false;
+	}
+	return true;
 }
 
 bool BuildList_TailInsert(LinkList &L)
-{
+{ 
 	int e;
-	LNode *t = L->next;
-	while (scanf("%d", &e)) InsertNextNode(t, e);
-	t->next = NULL;
+	LNode* t = L;
+	while (scanf("%d", &e))
+	{
+		if (InsertNextNode(t, e)) t = t->next;
+		else return false;
+	}
 	return true;
 }
+
