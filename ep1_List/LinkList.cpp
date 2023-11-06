@@ -109,14 +109,14 @@ bool DeleteNode(LinkList &L, int pos, ElemType &e)
 	LNode* s = p->next;
 	e = s->data;
 	p->next = s->next;
-	free(p);
+	free(s);
 	return true;
 }
 
 bool DeleteNode(LinkList &L, LNode* p)
 {
 	if (!p) return false;
-	if (!(p->next)) // test
+	if (!(p->next))
 	{
 		LNode* s = L;
 		int j = 0;

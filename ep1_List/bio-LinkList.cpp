@@ -81,6 +81,7 @@ bool InsertNextNode(BLNode* p, ElemType e)
 	s->data = e;
     s->prior = p;
 	s->next = p->next;
+	p->next->prior = s;
 	p->next = s;
 	return true;
 }
@@ -93,14 +94,10 @@ bool InsertPriorNode(BLNode* p, ElemType e)
 	s->data = e;
     s->next = p;
 	s->prior = p->prior;
+	p->prior->next = s;
 	p->prior = s;
 	return true;
 }
-
-// next start their
-// next start their
-// next start their
-// remember to check
 
 bool InsertNode(BioLinkList &L, int pos, ElemType e)
 {
@@ -116,29 +113,19 @@ bool DeleteNode(BioLinkList &L, int pos, ElemType &e)
 	if (!p || !p->next) return false;
 	BLNode* s = p->next;
 	e = s->data;
+	s->next->prior = p;
 	p->next = s->next;
-	free(p);
+	free(s);
 	return true;
 }
 
 bool DeleteNode(BioLinkList &L, BLNode* p)
 {
 	if (!p) return false;
-	if (!(p->next)) // test
-	{
-		BLNode* s = L;
-		int j = 0;
-		while (s->next->next) s = s->next;
-		s->next = NULL;
-		free(p);
-	}
-	else
-	{
-		BLNode* s = p->next;
-		p->data = s->data;
-		p->next = s->next;
-		free(p);
-	}
+	BLNode* s = p->prior;
+	s->next = p->next;
+	if (p->next) p->next->prior = s;
+	free(p);
 	return true;
 }
 
