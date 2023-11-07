@@ -45,7 +45,7 @@ bool InitList(BioLinkList &L)
 
 bool Empty(BioLinkList L)
 {
-	return (!L || !L->next || !L->prior);
+	return (!L || !L->next);
 }
 
 int length(BioLinkList L)
@@ -81,7 +81,7 @@ bool InsertNextNode(BLNode* p, ElemType e)
 	s->data = e;
     s->prior = p;
 	s->next = p->next;
-	p->next->prior = s;
+	if (p->next) p->next->prior = s;
 	p->next = s;
 	return true;
 }
@@ -94,7 +94,7 @@ bool InsertPriorNode(BLNode* p, ElemType e)
 	s->data = e;
     s->next = p;
 	s->prior = p->prior;
-	p->prior->next = s;
+	if (p->next) p->prior->next = s;
 	p->prior = s;
 	return true;
 }
