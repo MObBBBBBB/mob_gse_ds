@@ -1,5 +1,4 @@
 #include<iostream>
-#include<memory.h>
 #include<stack>
 #include<queue>
 using namespace std;
@@ -10,6 +9,13 @@ typedef struct BiTNode
 	ElemType data;
 	struct BiTNode *lchild, *rchild;
 } BiTNode, *BiTree;
+
+bool InitTree(BiTree &root);
+bool InsertNode(BiTNode* parent, ElemType e); // 完全二叉树
+void visit(BiTNode* t);
+void PreOrder(BiTree t); // 递归
+void PreOrder(BiTree T); // 递推
+void LevelOrder(BiTree T);
 
 
 

@@ -1,5 +1,4 @@
 #include<iostream>
-#include<memory.h>
 #define MAXSIZE 257
 using namespace std;
 
@@ -8,6 +7,10 @@ typedef struct
 	char ch[MAXSIZE];
 	int length;
 } SqString;
+
+SqString SubString(SqString s, int pos, int len);
+int StrCompare(SqString s, SqString t);
+int index(SqString s, SqString t); // 暴力
 
 
 int main()
