@@ -4,7 +4,7 @@
 using namespace std;
 typedef int ElemType;
 
-typedef struct
+typedef struct SqQueue
 {
 	ElemType data[MAXSIZE];
 	int front, rear, size;
@@ -22,6 +22,7 @@ typedef struct
 } LinkedQueue;
 
 bool initQueue(SqQueue &q);
+bool Empty(SqQueue q);
 bool EnQueue(SqQueue &q, ElemType x);
 bool DeQueue(SqQueue &q, ElemType &x);
 ElemType GetHead(SqQueue q);
@@ -45,9 +46,14 @@ bool initQueue(SqQueue &q)
 	return true;
 }
 
+bool Empty(SqQueue q)
+{
+	return q.size == 0;
+}
+
 bool EnQueue(SqQueue &q, ElemType x)
 {
-	if (q.size > MAXSIZE) return false;
+	if (q.size == MAXSIZE) return false;
 	q.data[q.rear] = x;
 	q.rear = (q.rear + 1) % MAXSIZE;
 	q.size++;
@@ -56,7 +62,7 @@ bool EnQueue(SqQueue &q, ElemType x)
 
 bool DeQueue(SqQueue &q, ElemType &x)
 {
-	if (q.size < 1) return false;
+	if (q.size == 0) return false;
 	x = q.data[q.front];
 	q.front = (q.front + 1) % MAXSIZE;
 	q.size--;
@@ -65,6 +71,6 @@ bool DeQueue(SqQueue &q, ElemType &x)
 
 ElemType GetHead(SqQueue q)
 {
-	if (q.size < 1) return false;
+	if (q.size == 0) return NULL;
 	return q.data[q.front];
 }
