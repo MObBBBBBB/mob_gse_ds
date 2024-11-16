@@ -6,20 +6,32 @@ typedef struct ThreadNode
 {
 	ElemType data;
 	struct ThreadNode *lchild, *rchild;
-	int ltag, rtag;
-	ThreadNode(ElemType x): data(x), lchild(nullptr), rchild(nullptr), ltag(0), rtag(0) {};
+	int ltag = 0, rtag = 0;
+	// ThreadNode(ElemType x): data(x), lchild(nullptr), rchild(nullptr), ltag(0), rtag(0) {};
 } ThreadNode, *ThreadTree;
 
 ThreadNode* pre = NULL; // 辅助变量，记录构建时当前节点的前一个结点
+
+// 构建中序线索二叉树
 void CreateInThreadTree(ThreadTree &T);
 void InThreaded(ThreadNode *p);
 void visit(ThreadNode *p);
+
+// 构建后，遍历用途函数，下列前驱后继指的是在三种遍历序列中的，不是树本身结构的
+// 后继，往后搜
+ThreadNode* FirstNode(ThreadNode* p);
+ThreadNode* NextNode_b(ThreadNode* p);
+// 前驱，往前搜
+ThreadNode* LastNode(ThreadNode* p);
+ThreadNode* NextNode_f(ThreadNode* p);
+void visit_t(ThreadNode* p);
+void InOrder(ThreadTree T);
 
 
 
 int main()
 {
-
+	
 
 	return 0;
 }
@@ -57,7 +69,8 @@ void CreateInThreadTree(ThreadTree &T)
 	if (T)
 	{
 		InThreaded(T);
-		if(!pre->rchild) pre->rtag = 1;
+		pre->rchild = nullptr; // 在构造后序线索时，应当在此处判断pre->rtag!=0，防止将原本的二叉树破坏
+		pre->rtag = 1;
 	}
 }
 
@@ -70,10 +83,22 @@ ThreadNode* FirstNode(ThreadNode* p)
 	return p;
 }
 
-ThreadNode* NextNode(ThreadNode* p)
+ThreadNode* NextNode_b(ThreadNode* p)
 {
-	if (p->rtag == 0) p = FirstNode(p->rchild);
-	return p->rchild;
+	if (p->rtag == 0) return FirstNode(p->rchild);
+	else return p->rchild; 
+}
+
+ThreadNode* LastNode(ThreadNode* p)
+{
+	while (p->rtag == 0) p = p->rchild;
+	return p;
+}
+
+ThreadNode* NextNode_f(ThreadNode* p)
+{
+	if (p->ltag == 0) return LastNode(p->lchild);
+	else return p->lchild;
 }
 
 void visit_t(ThreadNode* p)
@@ -83,6 +108,7 @@ void visit_t(ThreadNode* p)
 
 void InOrder(ThreadTree T)
 {
-	for (ThreadNode *p = FirstNode(T); p; p = NextNode(p))
+	for (ThreadNode* p = FirstNode(p); p; p = NextNode_b(p))
 		visit_t(p);
 }
+
