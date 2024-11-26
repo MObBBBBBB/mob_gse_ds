@@ -1,15 +1,16 @@
 #include<iostream>
 using namespace std;
 
+typedef int ElemType;
 typedef struct BSTNode
 {
-	int data;
+	ElemType data;
 	struct BSTNode *lchild, *rchild;
 } BSTNode, *BSTree;
 
-BSTNode* BST_Search(BSTree T, int k);
-bool BST_Insert(BSTree &T, int k);
-void Create_BST(BSTree T, int num[], int n);
+BSTNode* BST_Search(BSTree T, ElemType key);
+bool BST_Insert(BSTree &T, ElemType e);
+void Create_BST(BSTree &T, ElemType num[], int numlen);
 
 
 int main()
@@ -19,32 +20,36 @@ int main()
 }
 
 
-BSTNode* BST_Search(BSTree T, int key)
+BSTNode* BST_Search(BSTree T, ElemType key)
 {
-	while (T || key != T->data)
+	while (T)
 	{
-		if (key < T->data) T = T->lchild;
-		else T = T->rchild;
+		if (key == T->data) return T;
+		else if (key > T->data) T = T->rchild;
+		else T = T->lchild;
 	}
 	return T;
 }
 
-bool BST_Insert(BSTree &T, int key)
+bool BST_Insert(BSTree &T, ElemType e)
 {
-	if (!T)
+	BSTNode* t = T;
+	if (!t)
 	{
-		T = (BSTNode*)malloc(sizeof(BSTNode));
-		T->data = key;
-		T->lchild = T->rchild = NULL;
-		return 1;
+		t = (BSTNode*)malloc(sizeof(BSTNode));
+		t->data = e;
+		t->lchild = nullptr;
+		t->rchild = nullptr;
+		return true;
 	}
-	if (T->data == key) return 0;
-	if (T->data < key) BST_Insert(T->lchild, key);
-	else BST_Insert(T->rchild, key);
+	if (e == t->data) return false;
+	if (e > t->data) BST_Insert(t->rchild, e);
+	else BST_Insert(t->lchild, e);	
 }
 
-void Create_BST(BSTree T, int num[], int n)
+void Create_BST(BSTree &T, ElemType num[], int numlen)
 {
-	T = NULL;
-	for (int i = 0; i < n; i++) BST_Insert(T, num[i]);
+	T = nullptr;
+	BSTNode* t = T;
+	for (int i = 0; i < numlen; i++) BST_Insert(t, num[i]);
 }
