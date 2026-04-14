@@ -39,7 +39,7 @@ int main()
 
 
 
-void BFSTraversal(Graph G)
+void BFSTraversal(Graph G)  // 保证非连通图也能被访问
 {
 	// for (int i = 0; i < G.vexnum; ++i) visited[i] = false;
 	InitQueue(Q);
@@ -49,7 +49,7 @@ void BFSTraversal(Graph G)
 	}
 }
 
-void bfs(Graph G, VertexType v)
+void bfs(Graph G, VertexType v)  // 连通图的bfs
 {
 	visit(v);
 	EnQueue(Q, v);

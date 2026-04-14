@@ -129,7 +129,7 @@ bool DeleteNodebyNode(LinkList &L, LNode* p)
 		LNode* s = p->next;
 		p->data = s->data;
 		p->next = s->next;
-		free(p);
+		free(s);
 	}
 	return true;
 }

@@ -14,6 +14,7 @@ bool InitTree(BiTree &root);
 bool InsertNode(BiTNode* parent, ElemType e); // 完全二叉树
 void visit(BiTNode* t);
 void PreOrder(BiTree T); // 递归
+int treedepth(BiTree T);
 void LevelOrder(BiTree T);
 // 递推实现的前中后序遍历
 void PreOrder(BiTree t);
@@ -45,7 +46,7 @@ bool InsertNode(BiTNode* parent, ElemType e) // 完全二叉树
 {
 	if (!parent || (parent->lchild && parent->rchild)) return false;
 	BiTNode* child = (BiTNode*)malloc(sizeof(BiTNode));
-	if (child) return false;
+	if (!child) return false;
 	if (!parent->lchild) parent->lchild = child;
 	else parent->rchild = child;
 	child->data = e;
@@ -67,6 +68,14 @@ void PreOrder(BiTree T) // 递归
 		PreOrder(T->lchild);
 		PreOrder(T->rchild);
 	}
+}
+
+int treedepth(BiTree T)
+{
+	if (!T) return 0;
+	int l = treedepth(T->lchild);
+	int r = treedepth(T->rchild);
+	return l>r ? l+1 : r+1;
 }
 
 void LevelOrder(BiTree T)

@@ -1,25 +1,26 @@
 // 王道书版详见截图
+// 本质是个树形结构
 #include<iostream>
 using namespace std;
 
 const int N = 13;
 
-int p[N];
+int p[N];  // p[x]存储x的父节点
 
 void initial()
 {
-	for (int i = 0; i < N; i++) p[i] = i;
+	for (int i = 0; i < N; i++) p[i] = i;  // 初始化，每个元素的父节点都是自己
 }
 
 int find(int x)
 {
-	if (p[x] != x) p[x] = find(p[x]);
+	if (p[x] != x) p[x] = find(p[x]);  // 求集合编号（根节点是哪个元素），顺带着路径压缩
 	return p[x];
 }
 
 void merge(int root1, int root2)
 {
-	p[find(root1)] = find(root2);
+	p[find(root1)] = find(root2);  // 把1合并到2上
 }
 
 int main()

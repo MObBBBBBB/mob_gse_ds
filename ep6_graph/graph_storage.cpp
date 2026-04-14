@@ -1,6 +1,8 @@
 #include<iostream>
 using namespace std;
 
+#define INF 2e30
+
 const int MaxVertexNum = 1e2;
 
 typedef int VertexType;

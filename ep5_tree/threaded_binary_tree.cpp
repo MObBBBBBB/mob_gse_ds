@@ -108,7 +108,8 @@ void visit_t(ThreadNode* p)
 
 void InOrder(ThreadTree T)
 {
-	for (ThreadNode* p = FirstNode(p); p; p = NextNode_b(p))
+	if (!T) return;
+	for (ThreadNode* p = FirstNode(T); p; p = NextNode_b(p))
 		visit_t(p);
 }
 
