@@ -69,7 +69,7 @@ void CreateInThreadTree(ThreadTree &T)
 	if (T)
 	{
 		InThreaded(T);
-		pre->rchild = nullptr; // 在构造后序线索时，应当在此处判断pre->rtag!=0，防止将原本的二叉树破坏
+		pre->rchild = nullptr; // 中序末结点无右孩子；若改为后序线索化，末结点仅在右孩子为空时设置空后继线索
 		pre->rtag = 1;
 	}
 }
@@ -108,7 +108,8 @@ void visit_t(ThreadNode* p)
 
 void InOrder(ThreadTree T)
 {
-	for (ThreadNode* p = FirstNode(p); p; p = NextNode_b(p))
+	if (!T) return;
+	for (ThreadNode* p = FirstNode(T); p; p = NextNode_b(p))
 		visit_t(p);
 }
 

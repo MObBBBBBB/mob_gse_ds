@@ -98,14 +98,14 @@ bool InsertPriorNode(LNode* p, ElemType e)
 bool InsertNodebyPos(LinkList &L, int pos, ElemType e)
 {
 	if (pos < 1) return false;
-	LNode* p = GetElem(L, pos-1);
+	LNode* p = (pos == 1) ? L : GetElem(L, pos-1);
 	return InsertNextNode(p, e);
 }
 
 bool DeleteNodebyPos(LinkList &L, int pos, ElemType &e)
 {
 	if (pos < 1) return false;
-	LNode* p = GetElem(L, pos-1);
+	LNode* p = (pos == 1) ? L : GetElem(L, pos-1);
 	if (!p || !p->next) return false;
 	LNode* s = p->next;
 	e = s->data;
@@ -129,7 +129,7 @@ bool DeleteNodebyNode(LinkList &L, LNode* p)
 		LNode* s = p->next;
 		p->data = s->data;
 		p->next = s->next;
-		free(p);
+		free(s);
 	}
 	return true;
 }
@@ -146,7 +146,7 @@ bool BuildList_LInsert(LinkList &L)
 	if (!Empty(L)) return false;
 	ElemType e;
 	// if ElementType is modified.Remember to modify the format parameter of scanf()
-	while (scanf("%d", &e))
+	while (scanf("%d", &e) == 1)
 	{
 		if (InsertNextNode(L, e)) continue;
 		else return false;
@@ -159,7 +159,7 @@ bool BuildList_TailInsert(LinkList &L)
 	if (!Empty(L)) return false;
 	ElemType e;
 	LNode* t = L;
-	while (scanf("%d", &e))
+	while (scanf("%d", &e) == 1)
 	{
 		if (InsertNextNode(t, e)) t = t->next;
 		else return false;
@@ -170,7 +170,7 @@ bool BuildList_TailInsert(LinkList &L)
 LinkList ReverseList(LinkList L) 
 {
 	if (!L || !L->next) return L;
-	LNode* pre = NULL, *t = L;
+	LNode* pre = NULL, *t = L->next;
 	while (t)
 	{
 		LNode* next = t->next;
@@ -178,6 +178,7 @@ LinkList ReverseList(LinkList L)
 		pre = t;
 		t = next;
 	}
-	return pre;
+	L->next = pre;
+  return L;
 }
 

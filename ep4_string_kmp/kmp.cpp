@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<string>
 
 using namespace std;
 
@@ -13,35 +14,43 @@ vector<int> prefix(const string& p)
     return next;
 }
 
-// 优化的前缀数组，需借助原前缀数组求，防止最坏情况kmp退化为暴力
-// vector<int> prefix_nextval(const string& p)
-// {
-//     vector<int> next = prefix(p);
-//     vector<int> nextval(next.size());
-//     nextval[0] = -1, nextval[1] = 0; 
-//     for (int i = 2; i < next.size(); ++i)
-//     {
-//         if (p[next[i]] == p[i]) nextval[i] = nextval[next[i]];
-//         else nextval[i] = next[i];
-//     }
-//     return nextval;
-// }
+// nextval 跳过必然重复失败的比较；普通 next 版 KMP 已具有 O(n+m) 时间复杂度。
+vector<int> prefix_nextval(const string& p)
+{
+    int n = p.size();
+    vector<int> next = prefix(p);
+    vector<int> nextval = next;
+    // 从下标 1 开始优化；nextval[0] 保持为 -1。
+    for (int j = 1; j < n; ++j)
+    {
+        if (p[j] == p[next[j]]) nextval[j] = nextval[next[j]];
+    }
+    // nextval[n] 保留 next[n]，用于完整匹配后继续寻找重叠匹配。
+    return nextval;
+}
 
-// 子串匹配，返回所有匹配位置
+// 子串匹配，返回所有匹配位置（下标从 0 开始）。
 vector<int> kmp(const string& t, const string& p)
 {
     int n = p.size(), m = t.size();
-    auto next = prefix(p);
-    // auto nextval = prefix_nextval(p);
     vector<int> res;
+    // 空模式串匹配主串的所有边界位置。
+    if (n == 0)
+    {
+        for (int i = 0; i <= m; ++i) res.push_back(i);
+        return res;
+    }
+    // 下列两行二选一，后续匹配代码完全相同。
+    auto next = prefix_nextval(p);
+    // auto next = prefix(p);
     for (int i = 0, j = 0; i < m; ++i)
     {
-        while (j > 0 && p[j] != t[i]) j = next[j];
-        if (p[j] == t[i]) j++;
+        while (j >= 0 && p[j] != t[i]) j = next[j];
+        ++j; // 匹配成功时前进；退到 -1 时恢复为 0，并跳过当前主串字符。
         if (j == n)
         {
             res.push_back(i - j + 1);
-            j = next[j];
+            j = next[n]; // 两种数组的第 n 项相同，均为普通 next[n]。
         }
     }
     return res;

@@ -38,7 +38,7 @@ bool InitList(BioLinkList &L)
 	L = (BLNode*)malloc(sizeof(BLNode));
 	if (!L) return false;
 	L->data = -114514;
-    L->prior = NULL;
+  L->prior = NULL;
 	L->next = NULL;
 	return true;
 }
@@ -79,7 +79,7 @@ bool InsertNextNode(BLNode* p, ElemType e)
 	BLNode* s = (BLNode*)malloc(sizeof(BLNode));
 	if (!s) return false;
 	s->data = e;
-    s->prior = p;
+  s->prior = p;
 	s->next = p->next;
 	if (p->next) p->next->prior = s;
 	p->next = s;
@@ -92,9 +92,9 @@ bool InsertPriorNode(BLNode* p, ElemType e)
 	BLNode* s = (BLNode*)malloc(sizeof(BLNode));
 	if (!s) return false;
 	s->data = e;
-    s->next = p;
+  s->next = p;
 	s->prior = p->prior;
-	if (p->next) p->prior->next = s;
+	if (p->prior) p->prior->next = s;
 	p->prior = s;
 	return true;
 }
@@ -113,7 +113,7 @@ bool DeleteNode(BioLinkList &L, int pos, ElemType &e)
 	if (!p || !p->next) return false;
 	BLNode* s = p->next;
 	e = s->data;
-	s->next->prior = p;
+	if (s->next) s->next->prior = p;
 	p->next = s->next;
 	free(s);
 	return true;
@@ -140,7 +140,7 @@ bool BuildList_HeadInsert(BioLinkList &L)
 {
 	ElemType e;
 	// if ElementType is modified.Remember to modify the format parameter of scanf()
-	while (scanf("%d", &e))
+	while (scanf("%d", &e) == 1)
 	{
 		if (InsertNextNode(L, e)) continue;
 		else return false;
@@ -152,7 +152,7 @@ bool BuildList_TailInsert(BioLinkList &L)
 { 
 	ElemType e;
 	BLNode* t = L;
-	while (scanf("%d", &e))
+	while (scanf("%d", &e) == 1)
 	{
 		if (InsertNextNode(t, e)) t = t->next;
 		else return false;

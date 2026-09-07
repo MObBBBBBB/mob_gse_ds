@@ -33,7 +33,7 @@ BSTNode* BST_Search(BSTree T, ElemType key)
 
 bool BST_Insert(BSTree &T, ElemType e)
 {
-	BSTNode* t = T;
+	BSTNode*& t = T;
 	if (!t)
 	{
 		t = (BSTNode*)malloc(sizeof(BSTNode));
@@ -43,13 +43,13 @@ bool BST_Insert(BSTree &T, ElemType e)
 		return true;
 	}
 	if (e == t->data) return false;
-	if (e > t->data) BST_Insert(t->rchild, e);
-	else BST_Insert(t->lchild, e);	
+	if (e > t->data) return BST_Insert(t->rchild, e);
+	else return BST_Insert(t->lchild, e);	
 }
 
 void Create_BST(BSTree &T, ElemType num[], int numlen)
 {
 	T = nullptr;
-	BSTNode* t = T;
+	BSTNode*& t = T;
 	for (int i = 0; i < numlen; i++) BST_Insert(t, num[i]);
 }

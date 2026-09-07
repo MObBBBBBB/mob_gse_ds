@@ -1,5 +1,8 @@
 #include<iostream>
+#include<climits>
 using namespace std;
+
+const int INF = INT_MAX;
 
 const int MaxVertexNum = 1e2;
 

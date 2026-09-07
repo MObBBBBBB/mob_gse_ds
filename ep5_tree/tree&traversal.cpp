@@ -11,9 +11,10 @@ typedef struct BiTNode
 } BiTNode, *BiTree;
 
 bool InitTree(BiTree &root);
-bool InsertNode(BiTNode* parent, ElemType e); // 完全二叉树
+bool InsertNode(BiTNode* parent, ElemType e); // 指定父结点下先左后右插入，完全性由父结点选择顺序保证
 void visit(BiTNode* t);
 void PreOrder(BiTree T); // 递归
+int treedepth(BiTree T);
 void LevelOrder(BiTree T);
 // 递推实现的前中后序遍历
 void PreOrder(BiTree t);
@@ -41,11 +42,13 @@ bool InitTree(BiTree &root)
 	return true;
 }
 
-bool InsertNode(BiTNode* parent, ElemType e) // 完全二叉树
+// 完全二叉树方式的插入
+// 在指定父结点下先左后右插入；构造完全二叉树还需按层选择父结点。
+bool InsertNode(BiTNode* parent, ElemType e)
 {
 	if (!parent || (parent->lchild && parent->rchild)) return false;
 	BiTNode* child = (BiTNode*)malloc(sizeof(BiTNode));
-	if (child) return false;
+	if (!child) return false;
 	if (!parent->lchild) parent->lchild = child;
 	else parent->rchild = child;
 	child->data = e;
@@ -67,6 +70,14 @@ void PreOrder(BiTree T) // 递归
 		PreOrder(T->lchild);
 		PreOrder(T->rchild);
 	}
+}
+
+int treedepth(BiTree T)
+{
+	if (!T) return 0;
+	int l = treedepth(T->lchild);
+	int r = treedepth(T->rchild);
+	return l>r ? l+1 : r+1;
 }
 
 void LevelOrder(BiTree T)
@@ -160,7 +171,7 @@ void PostOrder(BiTree t)
 	BiTNode* flag = nullptr;
 	while (t)
 	{
-		if (t->lchild && flag != t->lchild && flag != t->rchild)
+		if (t->lchild && flag != t->lchild && (!t->rchild || flag != t->rchild))
 		{
 			s.push(t);
 			t = t->lchild;

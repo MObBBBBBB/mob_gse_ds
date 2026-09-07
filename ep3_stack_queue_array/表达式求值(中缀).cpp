@@ -9,7 +9,7 @@ using namespace std;
 
 stack<char> sym;
 stack<int> num;
-unordered_map<char, int> pr = {{'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}, {'^', 3}};  // 定义运算符优先级，可填入任意运算符，并在cal函数中添加运算即可
+unordered_map<char, int> pr = {{'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}, {'^', 3}};  // 定义二元运算符优先级；添加运算符时还需处理其运算规则和结合性；也需要在cal中注册运算。
 
 void cal()
 {
@@ -52,7 +52,9 @@ int main()
         else
         {
             // 判断优先级，优先级大的先算
-            while (!sym.empty() && pr[sym.top()] >= pr[c]) cal();
+            // while (!sym.empty() && (pr[sym.top()] > pr[c]))
+            // 防止左括号索引优先级字典错误，和连续出现乘方符号导致错误
+            while (!sym.empty() && sym.top() != '(' && (pr[sym.top()] > pr[c] || (pr[sym.top()] == pr[c] && c != '^'))) cal();
             sym.push(c);
         }
     }
