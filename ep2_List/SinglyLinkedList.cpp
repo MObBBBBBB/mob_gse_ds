@@ -6,7 +6,7 @@ typedef struct LNode
 {
     ElemType data;
     struct LNode* next;
-}LNode, *LinkList;
+} LNode, *LinkList;
 
 void InitList(LinkList &L);                              // 初始化链表
 int Length(LinkList L);                                  // 查表长
