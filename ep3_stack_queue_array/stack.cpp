@@ -81,7 +81,7 @@ void InitSharedStack(SharedStack &S) {
 typedef struct LSNode{
     ElemType data;
     struct LSNode *next;
-}LSNode, *LinkedStack;
+} LSNode, *LinkedStack;
 
 // 链栈的优点是几乎不存在栈溢出，能更灵活利用内存。头结点的next指向栈顶元素。
 // 链栈不存在顺序栈那种固定容量导致的栈满问题，只要系统还有可用内存，就可以继续申请结点。
