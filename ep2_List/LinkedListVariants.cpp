@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+#define MAXSIZE 100
 typedef int ElemType;
 /*------------------------------------------------------------------------*/
 
@@ -99,7 +100,6 @@ void InitCDLinkList(CDLinkList &L) {
 /*------------------------------------------------------------------------*/
 
 // 静态链表
-#define MAXSIZE 100
 typedef struct StaticNode {
     ElemType data;
     // 本质是用线性表模拟链表，所以定义更接近于线性表的定义
