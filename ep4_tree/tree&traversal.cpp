@@ -1,197 +1,77 @@
-#include<iostream>
-#include<stack>
-#include<queue>
-using namespace std;
+#include<stdio.h>
 
 typedef int ElemType;
-typedef struct BiTNode
-{
-	ElemType data;
-	struct BiTNode *lchild, *rchild;
+
+typedef struct BiTNode {
+    ElemType data;
+    struct BiTNode *lchild, *rchild;
 } BiTNode, *BiTree;
 
-bool InitTree(BiTree &root);
-bool InsertNode(BiTNode* parent, ElemType e); // 指定父结点下先左后右插入，完全性由父结点选择顺序保证
-void visit(BiTNode* t);
-void PreOrder(BiTree T); // 递归
-int treedepth(BiTree T);
-void LevelOrder(BiTree T);
-// 递推实现的前中后序遍历
-void PreOrder(BiTree t);
-void InOrder(BiTree t);
-void PostOrder(BiTree t);
+void visit(BiTNode *t);  // 访问函数：为了保证算法正确占位用，这里不做实现，可根据需要填写具体的代码
 
+void PreOrder(BiTree T);    // 先序遍历（DFS）
+void InOrder(BiTree T);     // 中序遍历
+void PostOrder(BiTree T);   // 后序遍历
+void LevelOrder(BiTree T);  // 层次遍历（BFS）
 
+// 先序、中序、后序遍历都采用递归写法，区别只是visit函数的位置
+// 时间复杂度为O(n)，空间复杂度为O(h)（借助了程序栈；h是树的高度）
+// 这三种遍历都是DFS，但如果按照后续图章节DFS的定义，只有先序遍历对应
 
-int main()
-{
-
-
-	return 0;
+void PreOrder(BiTree T) {
+    // 注意这里指针探到空的时候是递归出口
+    // 同时记得这里是if判断，千万不要写循环，非常容易出现死循环
+    if (T != NULL) {
+        visit(T);
+        PreOrder(T->lchild);
+        PreOrder(T->rchild);
+    }
 }
 
-
-
-bool InitTree(BiTree &root)
-{
-	root = (BiTNode*)malloc(sizeof(BiTNode));
-	if (!root) return false;
-	root->data = NULL;
-	root->lchild = nullptr;
-	root->rchild = nullptr;
-	return true;
+void InOrder(BiTree T) {
+    if (T != NULL) {
+        InOrder(T->lchild);
+        visit(T);
+        InOrder(T->rchild);
+    }
 }
 
-// 完全二叉树方式的插入
-// 在指定父结点下先左后右插入；构造完全二叉树还需按层选择父结点。
-bool InsertNode(BiTNode* parent, ElemType e)
-{
-	if (!parent || (parent->lchild && parent->rchild)) return false;
-	BiTNode* child = (BiTNode*)malloc(sizeof(BiTNode));
-	if (!child) return false;
-	if (!parent->lchild) parent->lchild = child;
-	else parent->rchild = child;
-	child->data = e;
-	child->lchild = child->rchild = nullptr;
-	return true;
+void PostOrder(BiTree T) {
+    if (T != NULL) { 
+        PostOrder(T->lchild);
+        PostOrder(T->rchild);
+        visit(T);
+    }
 }
 
-void visit(BiTNode* t)
-{
-	printf("%d", t->data);
+// 层序遍历也叫BFS
+
+// 需要借助一个辅助队列存储当前被访问结点的孩子结点
+// 这里直接从 ep3_stack_queue_array\queue.cpp 借鉴定义，保证语法正确，不具体实现
+// 注意这里队列里的数据都是树结点
+#define MaxSize 100
+typedef struct Queue {
+    BiTNode *data[MaxSize];
+    int front, rear;
+} Queue;
+
+void InitQueue(Queue &Q);  // 初始化队列
+void EnQueue(Queue &Q, BiTNode *t);  // 树结点入队
+void DeQueue(Queue &Q, BiTNode *&t);  // 树节点出队，并将出队结点用t带回
+bool IsEmpty(Queue Q);  // 队列判空
+
+void LevelOrder(BiTree T) {
+    // 初始化辅助队列并让树T的根节点（指针）入队
+    Queue Q;
+    InitQueue(Q);
+    EnQueue(Q, T);
+
+    // 一层一层遍历
+    BiTNode *t;
+    while (!IsEmpty(Q)) {
+        DeQueue(Q, t);
+        visit(t);
+        if (t->lchild != NULL) EnQueue(Q, t->lchild);
+        if (t->rchild != NULL) EnQueue(Q, t->rchild);
+    }
 }
-
-void PreOrder(BiTree T) // 递归
-{
-	if (T) 
-	{
-		// 先序、后序、中序区别只在于调整以下三个语句的顺序
-		visit(T);
-		PreOrder(T->lchild);
-		PreOrder(T->rchild);
-	}
-}
-
-int treedepth(BiTree T)
-{
-	if (!T) return 0;
-	int l = treedepth(T->lchild);
-	int r = treedepth(T->rchild);
-	return l>r ? l+1 : r+1;
-}
-
-void LevelOrder(BiTree T)
-{
-	if (!T) return;
-	queue<BiTNode*> q;
-	q.push(T);
-	while (!q.empty())
-	{
-		BiTNode* t = q.front(); q.pop();
-		visit(t);
-		if (t->lchild) q.push(t->lchild);
-		if (t->rchild) q.push(t->rchild);
-	}
-}
-
-// 递推实现的前中后序遍历
-void PreOrder(BiTree t) // 递推
-{
-	stack<BiTNode*> s;
-	BiTNode* p = t;
-	while (p || !s.empty())
-	{
-		if (p)
-		{
-			visit(p);
-			s.push(p);
-			p = p->lchild;
-		}
-		else
-		{
-			p = s.top();
-			s.pop();
-			// 中序将visit()改到这里，后序详见p151(3)或PostOrder函数
-			p = p->rchild;
-		}
-	}
-}
-
-// // 先序的另一种实现
-// void PreOrder(BiTree t)
-// {
-// 	if (!t) return;
-// 	stack<BiTNode*> s;
-// 	while (t)
-// 	{
-// 		visit(t);
-// 		if (t->lchild)
-// 		{
-// 			if (t->rchild) s.push(t->rchild);
-// 			t = t->lchild;
-// 		}
-// 		else if (t->rchild) t = t->rchild;
-// 		else
-// 		{
-// 			if (!s.empty())
-// 			{
-// 				t = s.top();
-// 				s.pop();
-// 			}
-// 			else t = nullptr;
-// 		}
-// 	}
-// }
-
-void InOrder(BiTree t)
-{
-	if (!t) return;
-	stack<BiTNode*> s;
-	while (t || !s.empty())
-	{
-		if (t)
-		{
-			s.push(t);
-			t = t->lchild;
-		}
-		else
-		{
-			t = s.top();
-			s.pop();
-			visit(t);
-			t = t->rchild;
-		}
-	}
-}
-
-void PostOrder(BiTree t)
-{
-	if (!t) return;
-	stack<BiTNode*> s;
-	BiTNode* flag = nullptr;
-	while (t)
-	{
-		if (t->lchild && flag != t->lchild && (!t->rchild || flag != t->rchild))
-		{
-			s.push(t);
-			t = t->lchild;
-		}
-		else if (t->rchild && flag != t->rchild)
-		{
-			s.push(t);
-			t = t->rchild;
-		}
-		else
-		{
-			visit(t);
-			if (!s.empty())
-			{
-				flag = t;
-				t = s.top();
-				s.pop();
-			}
-			else t = nullptr;
-		}
-	}
-}
-
