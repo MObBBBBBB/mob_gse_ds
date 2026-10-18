@@ -29,7 +29,7 @@ bool visited[MaxSize];
 // 函数签名
 void visit(int v);           // 访问函数，具体实现根据情况处理，这里仅做占位
 void BFS(MGraph G, int v);   // BFS核心算法
-void BFSTraverse(MGraph G);  // 做初始化准备以及保证所有连通分量都被访问的封装函数
+void BFSTraverse(MGraph G);  // 做初始化准备以及保证所有顶点都被访问的封装函数
 
 // 具体实现
 void BFSTraverse(MGraph G) {
@@ -62,8 +62,12 @@ void BFS(MGraph G, int v) {
         }
     }
 }
-// 对连通无向图，按照BFS首次发现顶点时经过的边可得到广度优先生成树；对这颗树的BFS与对图的BFS序列是对应的
-// 对非连通图，BFSTraverse最终得到广度优先生成森林；对这森林中每一颗树的BFS序列拼接在一起与对图的BFS序列是对应的
+
+// 对连通无向图，按照BFS首次发现顶点时经过的边可得到广度优先生成树；
+// 对这颗树的BFS与对图的BFS序列是对应的
+// 对非连通图，BFSTraverse最终得到广度优先生成森林；
+// 对这森林中每一颗树的BFS序列拼接在一起与对图的BFS序列是对应的
+
 // 对有向图，也可以根据BFS首次发现顶点时经过的边形成BFS搜索树/森林，
 // 但BFS的调用次数与强连通分量数、弱连通分量数都没有简单对应关系，
 // 且不同的起始顶点和顶点扫描顺序可能得到不同结果。
