@@ -27,6 +27,8 @@ void QuickSort(Elemtype a[], int low, int high) {
 
         // 指针未相遇或交叉时交换
         // 这里注意要多套一层l<h的判断，因为上面的循环可能会扫到l>=h的情况停止，此时不用执行交换。
+        // 本轮执行完成后，多数情况下l会大于h，也有少部分可能l=h；
+        // 这里h的位置正好把元素分成了左右区间，左一定小于右，但是pivot可能不在h的位置上，pivot是一个比较值
         if (l < h) {
             Elemtype tmp = a[l];
             a[l] = a[h];
