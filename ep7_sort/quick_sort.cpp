@@ -1,27 +1,45 @@
-#include<iostream>
-using namespace std;
+typedef int Elemtype;
 
-void QuickSort(int a[], int low, int high)
-{
-	if (low >= high) return;
-	int l = low - 1, h = high + 1;
-	int pivot = a[(l+h)/2];
-	while (l < h)
-	{
-		do l++; while (pivot > a[l]);
-		do h--; while (pivot < a[h]);
-		if (l < h)
-		{
-			int t = a[l];
-			a[l] = a[h];
-			a[h] = t;
-		}
-	}
-	QuickSort(a, low, h); QuickSort(a, h + 1, high);
+// 快速排序
+// 时间复杂度：最好、平均O(nlogn)；最差O(n^2)（序列划分极不均匀）
+// 空间复杂度：最好、平均O(logn)；最差O(n)（序列划分不均匀）
+// 不稳定排序
+// 平均排序性能优秀，是最常用的通用排序算法之一
+// 每次划分后，左区间元素 <= pivot，右区间元素 >= pivot
+
+// 这里一开始调用函数时low一般传入序列的起始位置（一般是0）；
+// high传入序列的最后一位的位置（一般是最后一个元素的下标——len-1）
+void QuickSort(Elemtype a[], int low, int high) {
+    // 递归出口
+    if (low >= high) return;
+
+    // l作为左侧的指针，h作为右侧的指针；双指针从区间两端向中间扫描
+    int l = low - 1, h = high + 1;
+    // 选取中间位置元素作为枢轴，可避免有序序列下的极端不均匀划分
+    int pivot = a[ (l+h)/2 ];
+
+    // 只要l<h，表明枢轴左右两侧有可能没有达到 左 <= pivot <= 右 的情况；当左右指针尚未相遇或交叉时，继续扫描并交换元素
+    while (l < h) {
+        // 由于前面l和h在定义时故意超出了一位，所以用do while循环
+        // 左指针寻找 >= pivot 的元素；右指针寻找 <= pivot 的元素
+        do l++; while (a[l] < pivot);
+        do h--; while (a[h] > pivot);
+
+        // 指针未相遇或交叉时交换
+        // 这里注意要多套一层l<h的判断，因为上面的循环可能会扫到l>=h的情况停止，此时不用执行交换。
+        if (l < h) {
+            Elemtype tmp = a[l];
+            a[l] = a[h];
+            a[h] = tmp;
+        }
+    }
+
+    // 每一次调用QuickSort都会确定左区间元素 <= pivot，右区间元素 >= pivot
+    // 分别递归处理左右两部分的序列，直到达到递归出口的条件，证明这一部分的序列已经排好
+    // 注意这里一定要用h，因为这里的设计l是可能大于h的
+    QuickSort(a, low, h); QuickSort(a, h + 1, high);
 }
 
-int main()
-{
-
-	return 0;
-}
+// 这里与王道的实现不一致，王道的排法是从第一个元素开始，然后每次排序都能保证pivot落到最终排序好序列中的位置
+// 这里的划分和定枢轴的方法对于有序序列来讲是一次均匀划分，可以尽可能避免这种让快排退化的情况；
+// 另外这里是每趟确定两个子区间的分界，不一定确定枢轴的最终位置
